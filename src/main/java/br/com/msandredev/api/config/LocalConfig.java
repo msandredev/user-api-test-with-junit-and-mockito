@@ -1,5 +1,6 @@
 package br.com.msandredev.api.config;
 
+
 import br.com.msandredev.api.domain.User;
 import br.com.msandredev.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
