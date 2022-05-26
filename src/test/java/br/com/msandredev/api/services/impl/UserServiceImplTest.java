@@ -3,6 +3,7 @@ package br.com.msandredev.api.services.impl;
 import br.com.msandredev.api.domain.User;
 import br.com.msandredev.api.domain.dto.UserDTO;
 import br.com.msandredev.api.repositories.UserRepository;
+import br.com.msandredev.api.services.exceptions.DataIntegratyViolationException;
 import br.com.msandredev.api.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
@@ -101,9 +101,21 @@ class UserServiceImplTest {
         assertEquals(FULL_NAME, response.getFullName());
         assertEquals(EMAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
-
-
     }
+    @Test
+    void whenCreateThenReturnADataIntegrityViolationException() {
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2);
+            service.create(userDTO);
+        } catch (Exception ex) {
+            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals("E-mail já utilizado por outro usuário. Favor utilizar outro e-mail!", ex.getMessage());
+        }
+    }
+
+
 
     @Test
     void update() {
