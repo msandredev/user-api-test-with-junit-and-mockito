@@ -30,11 +30,9 @@ class UserResourceTest {
     public static final String EMAIL = "andre@mail.com";
     public static final String PASSWORD = "123";
     public static final int INDEX = 0;
-    public static final String EMAIL_JA_UTILIZADO = "E-mail já utilizado por outro usuário. Favor utilizar outro e-mail!";
-    public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado!";
 
-    private User user;
-    private UserDTO userDTO;
+    private User user = new User();
+    private UserDTO userDTO = new UserDTO();
 
     @InjectMocks
     private UserResource resource;
