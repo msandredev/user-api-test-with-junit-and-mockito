@@ -4,7 +4,7 @@ import br.com.msandredev.api.domain.User;
 import br.com.msandredev.api.domain.dto.UserDTO;
 import br.com.msandredev.api.repositories.UserRepository;
 import br.com.msandredev.api.services.UserService;
-import br.com.msandredev.api.services.exceptions.DataIntegratyViolationException;
+import br.com.msandredev.api.services.exceptions.DataIntegrityViolationException;
 import br.com.msandredev.api.services.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     private void findByEmail(UserDTO obj) {
         Optional<User> user = repository.findByEmail(obj.getEmail());
         if (user.isPresent() && !user.get().getId().equals(obj.getId())) {
-            throw new DataIntegratyViolationException("E-mail já utilizado por outro usuário. Favor utilizar outro e-mail!");
+            throw new DataIntegrityViolationException("E-mail já utilizado por outro usuário. Favor utilizar outro e-mail!");
         }
     }
 }
