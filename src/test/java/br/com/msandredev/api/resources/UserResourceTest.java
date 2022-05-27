@@ -3,20 +3,21 @@ package br.com.msandredev.api.resources;
 import br.com.msandredev.api.domain.User;
 import br.com.msandredev.api.domain.dto.UserDTO;
 import br.com.msandredev.api.services.impl.UserServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -45,7 +46,6 @@ class UserResourceTest {
     private ModelMapper mapper;
 
 
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -72,7 +72,23 @@ class UserResourceTest {
     }
 
     @Test
-    void findAll() {
+    void whenFindAllThenReturnAListOfUserDTO() {
+        when(service.findAll()).thenReturn(List.of(user));
+        when(mapper.map(any(), any())).thenReturn(userDTO);
+
+        ResponseEntity<List<UserDTO>> response = resource.findAll();
+
+        assertNotNull(response); // response would not be null
+        assertNotNull(response.getBody()); // body of response would not be null
+        assertEquals(HttpStatus.OK, response.getStatusCode()); // the status code must be 200 (OK)
+        assertEquals(ResponseEntity.class, response.getClass()); // the class of response must be a ResponseEntity
+        assertEquals(ArrayList.class, response.getBody().getClass()); // the class of body on the response must be an ArrayList
+        assertEquals(UserDTO.class, response.getBody().get(INDEX).getClass()); // the class of body on the position 0 (zero) must be a UserDTO
+
+        assertEquals(ID, response.getBody().get(INDEX).getId()); // the ID of the first element on the response must be the same here
+        assertEquals(FULL_NAME, response.getBody().get(INDEX).getFullName()); // the NAME of the first element on the response must be the same here
+        assertEquals(EMAIL, response.getBody().get(INDEX).getEmail()); // the EMAIL of the first element on the response must be the same here
+        assertEquals(PASSWORD, response.getBody().get(INDEX).getPassword()); // the PASSWORD of the first element on the response must be the same here
     }
 
     @Test
